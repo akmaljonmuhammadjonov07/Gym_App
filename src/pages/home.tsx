@@ -2,10 +2,14 @@ import men from '@/assets/men.png';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { featuredItems, programs } from '@/constants';
+import { useUserState } from '@/stores/user-store';
+import { CgGym } from 'react-icons/cg';
 import { FaArrowRightLong } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
+	const { user } = useUserState();
+
 	return (
 		<>
 			<div className='w-full mt-12 h-screen flex items-center'>
@@ -15,11 +19,30 @@ const Home = () => {
 						A huge selection of health and fitness content, healthy recipes and
 						transformation stories to help you get fit and stay fit!
 					</p>
-					<Link to={'/auth'}>
-						<Button className='w-fit mt-6 font-bold h-12' size={'lg'}>
-							Join club now
-						</Button>
-					</Link>
+					{user ? (
+						<div className='flex gap-4'>
+							<Link to={'/dashboard'}>
+								<Button className='w-fit mt-6 font-bold h-12' size={'lg'}>
+									<span>Go to GYM</span>
+									<CgGym className='h-5 w-5 ml-2' />
+								</Button>
+							</Link>
+							<Button
+								className='w-fit mt-6 font-bold h-12'
+								variant={'destructive'}
+								size={'lg'}
+							>
+								<span>Logout</span>
+								<CgGym className='h-5 w-5 ml-2' />
+							</Button>
+						</div>
+					) : (
+						<Link to={'/auth'}>
+							<Button className='w-fit mt-6 font-bold h-12' size={'lg'}>
+								Join club now
+							</Button>
+						</Link>
+					)}
 
 					<div className='mt-24'>
 						<p className='text-muted-foreground'>AS FEATURED IN</p>
