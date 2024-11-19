@@ -1,6 +1,7 @@
 import { auth } from '@/firebase';
 import { loginSchema } from '@/lib/validation';
 import { useAuthState } from '@/stores/auth.store';
+import { useUserState } from '@/stores/user-store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { AlertCircle } from 'lucide-react';
@@ -25,8 +26,10 @@ import { Separator } from '../ui/separator';
 function Login() {
 	const { setAuth } = useAuthState();
 	const [isLoading, setIsLoading] = useState(false);
-	const navigate = useNavigate();
 	const [error, setError] = useState('');
+	const { setUser } = useUserState();
+	const navigate = useNavigate();
+
 	const form = useForm<z.infer<typeof loginSchema>>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: { email: '', password: '' },
@@ -38,6 +41,7 @@ function Login() {
 		setIsLoading(true);
 		try {
 			const res = await signInWithEmailAndPassword(auth, email, password);
+			setUser(res.user);
 			navigate('/');
 		} catch (error) {
 			const result = error as Error;

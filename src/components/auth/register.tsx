@@ -1,6 +1,7 @@
 import { auth } from '@/firebase';
 import { registerSchema } from '@/lib/validation';
 import { useAuthState } from '@/stores/auth.store';
+import { useUserState } from '@/stores/user-store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { AlertCircle } from 'lucide-react';
@@ -25,6 +26,8 @@ import { Separator } from '../ui/separator';
 function Register() {
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
+	const { setUser } = useUserState();
+
 	const [error, setError] = useState('');
 
 	const form = useForm<z.infer<typeof registerSchema>>({
@@ -36,6 +39,7 @@ function Register() {
 		setIsLoading(true);
 		try {
 			const res = await createUserWithEmailAndPassword(auth, email, password);
+			setUser(res.user);
 			navigate('/');
 		} catch (error) {
 			const result = error as Error;

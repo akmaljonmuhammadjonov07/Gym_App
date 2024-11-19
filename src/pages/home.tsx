@@ -2,13 +2,24 @@ import men from '@/assets/men.png';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { featuredItems, programs } from '@/constants';
+import { auth } from '@/firebase';
 import { useUserState } from '@/stores/user-store';
+import { LogOut } from 'lucide-react';
 import { CgGym } from 'react-icons/cg';
 import { FaArrowRightLong } from 'react-icons/fa6';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Home = () => {
-	const { user } = useUserState();
+	const { user, setUser } = useUserState();
+
+	const navigate = useNavigate();
+
+	const onLogout = () => {
+		auth.signOut().then(() => {
+			setUser(null);
+			navigate('/auth');
+		});
+	};
 
 	return (
 		<>
@@ -31,9 +42,10 @@ const Home = () => {
 								className='w-fit mt-6 font-bold h-12'
 								variant={'destructive'}
 								size={'lg'}
+								onClick={onLogout}
 							>
 								<span>Logout</span>
-								<CgGym className='h-5 w-5 ml-2' />
+								<LogOut className='h-5 w-5 ml-2' />
 							</Button>
 						</div>
 					) : (
