@@ -22,7 +22,7 @@ interface Props {
 	handler: (values: z.infer<typeof taskSchema>) => Promise<void>;
 }
 
-const TaskForm = ({ title = '', handler }: Props) => {
+const TaskForm = ({ title = '', handler, isEdit, onClose }: Props) => {
 	const form = useForm<z.infer<typeof taskSchema>>({
 		resolver: zodResolver(taskSchema),
 		defaultValues: { title: '' },
@@ -65,7 +65,17 @@ const TaskForm = ({ title = '', handler }: Props) => {
 							</FormItem>
 						)}
 					/>
-					<div className='flex justify-end'>
+					<div className='flex justify-end gap-4'>
+						{isEdit && (
+							<Button
+								type='button'
+								disabled={isLoading}
+								variant={'destructive'}
+								onClick={onClose}
+							>
+								cancel
+							</Button>
+						)}
 						<Button type='submit' disabled={isLoading}>
 							Submit
 						</Button>
